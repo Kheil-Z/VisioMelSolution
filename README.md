@@ -54,11 +54,15 @@ Inference time: <...>
 
 Machine specs you used for inference/training, and rough estimates of how long each step took.
 
-# Run training
+# Run training (Skip if want to infer using pretrained models)
 
 1. `python prepare_data.py `
+   - Splits the given data into the stratified train and validation datasets which we used. (saved as .csv files in data/)
+   - Iteratively downloads the Tiff images from the competions AWS bucket, saves a downsampled version of the image and deletes the heavy Tiff file. (saved as .png files in data/images/)
 2. `python multimodal_tritrain.py `
+   - Train and save the ResNet on the downloaded images. (You should now have a "tritrain.pth" file in the "models/" directory.)
 3. `python tritrain.py `
+   - Train and save the Multi-modal deep classifier on the image embeddings and tabular data. (You should now have a "after_finetune.pth" file in the "models/" directory.)
 
 # Run inference
 #### Using pretrained models (skip previous steps):
