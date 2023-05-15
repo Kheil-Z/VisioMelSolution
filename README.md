@@ -46,11 +46,11 @@ TODO : more?
     - `pip install -r requirements.txt `
 
 # Hardware
-The solutuon was run on TODO, 
+The solution was run on on a desktop machine (AMD EPYC 7502P 32-Core Processor, 64 GB RAM) with 4 NVIDIA GeForce 2080 Ti.
 
-Training time: <...>
+Training time: ~ 30 minutes
 
-Inference time: <...>
+Inference time: ~ 5 minutes
 
 Machine specs you used for inference/training, and rough estimates of how long each step took.
 
@@ -59,9 +59,9 @@ Machine specs you used for inference/training, and rough estimates of how long e
 1. `python prepare_data.py `
    - Splits the given data into the stratified train and validation datasets which we used. (saved as .csv files in data/)
    - Iteratively downloads the Tiff images from the competions AWS bucket, saves a downsampled version of the image and deletes the heavy Tiff file. (saved as .png files in data/images/)
-2. `python multimodal_tritrain.py `
+2. `python tritrain.py `
    - Train and save the ResNet on the downloaded images. (You should now have a "tritrain.pth" file in the "models/" directory.)
-3. `python tritrain.py `
+3. `python multimodal_tritrain.py `
    - Train and save the Multi-modal deep classifier on the image embeddings and tabular data. (You should now have a "after_finetune.pth" file in the "models/" directory.)
 
 # Run inference
@@ -78,3 +78,5 @@ Machine specs you used for inference/training, and rough estimates of how long e
 | --relapse_only   | False                     | Describes model outputs (see model class)                       |
 | --data_path      | data/                     | Path to data, must contain 'metada.csv' and tiff format images. |
 | --age_trick_bool | True                      | use age trick at inference                                      |
+
+# Disclaimer

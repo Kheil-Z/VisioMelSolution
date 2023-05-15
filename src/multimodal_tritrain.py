@@ -9,10 +9,10 @@ import torch
 import torch.nn as nn
 
 # Local libraries
-from utils.dataframe_process import make_dataframe_with_latent_space, clean_df
-from utils.models import ImageTabularModel
-from utils.datasets import ImageTabular
-from utils.utils import train_epoch
+from .utils.dataframe_process import make_dataframe_with_latent_space, clean_df
+from .utils.models import ImageTabularModel
+from .utils.datasets import ImageTabular
+from .utils.utils import train_epoch
 ################################################################
 ################################################################
 def warn(*args, **kwargs):
@@ -27,7 +27,7 @@ make_dataframe_with_latent_space(model_path=root+"/models/tritrain.pth",
                                 image_path = root+"/data/images",
                                 path_train=root+'/data/train_dataframe.csv',
                                 path_val=root+'/data/val_dataframe.csv',
-                                save_path = root+"data/",
+                                save_path = root+"/data/",
                                 remove_filename = False)
 
 ### Auxiliary funcs :
@@ -136,19 +136,18 @@ def run_model(config, train_dataframe, val_dataframe, features_names):
     min_train_loss_r, min_val_loss_r = np.Inf, np.Inf
     for epoch in range(config["epochs"]):
         print("Epoch {}/{}".format(epoch+1, config["epochs"]))
-        metrics["lr"].append(optimizer.param_groups[0]["lr"])
         
         loss_relapse = FocalLoss(gamma=config["gamma"] ,pos_weight=config["pos_weight_FL"])
         # Train Loop
         model.train()
-        metrics, _, _, _, _ , _, _, _, min_train_loss_r , _= train_epoch(device,
+        _, _, _, _ , _, _, _, min_train_loss_r , _= train_epoch(device,
                                                         model, optimizer,
                                                         relapse_only,
                                                         train_loader,
                                                         loss_breslow, loss_ulceration, loss_relapse,
                                                         config["alpha"], config["beta"], config["gamma"],
                                                         min_train_loss_r,
-                                                        clip = config["grad_clip"],
+                                                        clip=None,
                                                         patches=False,
                                                         verbose=False)
 
@@ -156,7 +155,7 @@ def run_model(config, train_dataframe, val_dataframe, features_names):
         model.eval()
         loss_relapse = torch.nn.BCELoss()
         with torch.no_grad():
-            metrics, val_loss, labels_r, labels_u, labels_b, predictions_r, predictions_u, predictions_b, min_val_loss_r, val_loss_r = train_epoch(device,
+            val_loss, labels_r, labels_u, labels_b, predictions_r, predictions_u, predictions_b, min_val_loss_r, val_loss_r = train_epoch(device,
                                                                                                         model, optimizer,
                                                                                                         relapse_only,
                                                                                                         val_loader,
@@ -169,7 +168,7 @@ def run_model(config, train_dataframe, val_dataframe, features_names):
         scheduler.step(val_loss)
         if val_loss_r < best_loss:
             best_loss = val_loss_r
-            torch.save(model.state_dict(), "../models/before_finetune.pth")
+            torch.save(model.state_dict(), "models/before_finetune.pth")
             print(f"Best model saved at epoch {epoch+1}, has val relapse loss : {val_loss_r}")
 
 
@@ -203,7 +202,7 @@ def finetune_model(config, train_dataframe, val_dataframe, features_names, model
     model.eval()
     loss_relapse = torch.nn.BCELoss()
     with torch.no_grad():
-        metrics, val_loss, labels_r, labels_u, labels_b, predictions_r, predictions_u, predictions_b, _, val_loss_r = train_epoch(device,
+        val_loss, labels_r, labels_u, labels_b, predictions_r, predictions_u, predictions_b, _, val_loss_r = train_epoch(device,
                                                                                                     model, optimizer,
                                                                                                     relapse_only,
                                                                                                     val_loader,
@@ -215,19 +214,18 @@ def finetune_model(config, train_dataframe, val_dataframe, features_names, model
     min_train_loss_r, min_val_loss_r = np.Inf, np.Inf
     for epoch in range(config["epochs"]):
         print("Finetune Epoch {}/{}".format(epoch+1, config["epochs"]))
-        metrics["lr"].append(optimizer.param_groups[0]["lr"])
         
         loss_relapse = FocalLoss(gamma=config["gamma"] ,pos_weight=config["pos_weight_FL"])
         # Train Loop
         model.train()
-        metrics, _, _, _, _ , _, _, _, min_train_loss_r , _= train_epoch(device,
+        _, _, _, _ , _, _, _, min_train_loss_r , _= train_epoch(device,
                                                         model, optimizer,
                                                         relapse_only,
                                                         train_loader,
                                                         loss_breslow, loss_ulceration, loss_relapse,
                                                         config["alpha"], config["beta"], config["gamma"],
                                                         min_train_loss_r,
-                                                        clip = config["grad_clip"],
+                                                        clip = None,
                                                         patches=False,
                                                         verbose=False)
 
@@ -235,7 +233,7 @@ def finetune_model(config, train_dataframe, val_dataframe, features_names, model
         model.eval()
         loss_relapse = torch.nn.BCELoss()
         with torch.no_grad():
-            metrics, val_loss, labels_r, labels_u, labels_b, predictions_r, predictions_u, predictions_b, min_val_loss_r, val_loss_r = train_epoch(device,
+            val_loss, labels_r, labels_u, labels_b, predictions_r, predictions_u, predictions_b, min_val_loss_r, val_loss_r = train_epoch(device,
                                                                                                         model, optimizer,
                                                                                                         relapse_only,
                                                                                                         val_loader,
@@ -248,7 +246,7 @@ def finetune_model(config, train_dataframe, val_dataframe, features_names, model
         scheduler.step(val_loss)                        
         if val_loss_r < best_loss:
             best_loss = val_loss_r
-            torch.save(model.state_dict(), "../models/after_finetune.pth")
+            torch.save(model.state_dict(), "models/after_finetune.pth")
             print(f"Best model saved at epoch {epoch+1}, has val relapse loss : {val_loss_r}")
 
 
@@ -270,8 +268,8 @@ age_denominator = 100
 breslow_denominator = 4 
 body_site_denominator = 14 
 
-path_train = root+"data/train_df_latent_space"
-path_val = root+"data/val_df_latent_space"
+path_train = root+"/data/train_df_latent_space"
+path_val = root+"/data/val_df_latent_space"
 
 # Set seed for rep
 set_seed(seed=0)
@@ -306,7 +304,7 @@ config={"batch_size": batch_size,
 
 run_model(config, train_dataframe, val_dataframe, features_names)
 
-saved_model_path = "../models/before_finetune.pth"
+saved_model_path = "models/before_finetune.pth"
 finetune_model(config, val_dataframe, val_dataframe, features_names, saved_model_path)
 
 

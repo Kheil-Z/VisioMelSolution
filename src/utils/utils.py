@@ -2,7 +2,14 @@ from tqdm import tqdm
 import torch
 from sklearn.metrics import accuracy_score
 
-
+def clean_state_dict(state_dict):
+    new_state_dict = {}
+    for key, value in state_dict.items():
+        if key.startswith("module."):
+            new_state_dict[key[7:]] = value
+        else:
+            new_state_dict[key] = value
+    return new_state_dict
 
 def train_epoch(device,
                 model, optimizer,

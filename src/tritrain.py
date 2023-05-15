@@ -20,7 +20,6 @@ from src.utils.datasets import BreslowUlcerationRelapseDataset
 from src.utils.imputers import ulceration_breslow_from_relapse_imputer
 
 root = os.getcwd()
-print(root)
 
 transfo_train = Compose([
     RandomHorizontalFlip(),
@@ -34,8 +33,8 @@ transfo_train = Compose([
 ])
 
 
-train_dataframe = pd.read_csv('train_dataframe.csv')
-val_dataframe = pd.read_csv('val_dataframe.csv')
+train_dataframe = pd.read_csv(os.path.join(root, 'data', 'train_dataframe.csv'))
+val_dataframe = pd.read_csv(os.path.join(root, 'data', 'val_dataframe.csv'))
 train_dataframe = train_dataframe[['filename', 'relapse', 'ulceration', 'breslow']]
 val_dataframe = val_dataframe[['filename', 'relapse', 'ulceration', 'breslow']]
 train_dataframe = ulceration_breslow_from_relapse_imputer(train_dataframe)
@@ -183,5 +182,5 @@ for epoch in range(epochs):
     print("Val acc breslow: {:.4f} - Val acc ulceration: {:.4f} - Val acc relapse: {:.4f}".format(val_acc_b, val_acc_u, val_acc_r))
     if val_loss_r < best_loss:
         best_loss = val_loss_r
-        torch.save(model.state_dict(), os.path.join(root, "models", "tritrain.pth"))
+        torch.save(model.module.state_dict(), os.path.join(root, "models", "tritrain.pth"))
         print("Best model saved at epoch {}".format(epoch+1))

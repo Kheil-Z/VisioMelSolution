@@ -12,8 +12,8 @@ from torchvision.transforms import Compose, ToTensor, Normalize
 import torch.nn as nn
 
 # Local libraries
-from utils.models import DummyModel
-from utils.imputers import ulceration_breslow_from_relapse_imputer
+from .models import DummyModel
+from .imputers import ulceration_breslow_from_relapse_imputer
 
 
 
@@ -22,7 +22,7 @@ def make_dataframe_with_latent_space(model_path="tritrain.pth",
                                     image_path = "data/images/",
                                     path_train='data/train_dataframe.csv',
                                     path_val='data/val_dataframe.csv',
-                                    savepath = "data/",
+                                    save_path = "data/",
                                     remove_filename = False):
     ## Init
     m = DummyModel(model_path=model_path).eval()
@@ -78,8 +78,8 @@ def make_dataframe_with_latent_space(model_path="tritrain.pth",
         train_dataframe = train_dataframe.drop(columns=['filename'],errors='ignore')
         val_dataframe = val_dataframe.drop(columns=['filename'], errors='ignore')
     
-    train_dataframe.to_pickle(savepath+"train_df_latent_space")
-    val_dataframe.to_pickle(savepath+"val_df_latent_space")
+    train_dataframe.to_pickle(save_path+"/train_df_latent_space")
+    val_dataframe.to_pickle(save_path+"/val_df_latent_space")
     
     return None
 
