@@ -1,10 +1,7 @@
-# Competition prize winner submission template
+# VisioMel Challenge: Predicting Melanoma Relapse
 
-**Congratulations on making it to this step! You're almost done** :tada:
+Tilted-Towers (lucas.robinet and Kheil-Z) solution
 
-This repository is provided to help with structuring and documenting your solution code before you submit it for review. **We recommend cloning this repository as a starting point for your submission.**
-
-Your goal is to **set up your solution as if it were a finished open-source project**. This means providing clear instructions, identifying dependencies and requirements, and structuring code logically with an obvious point of entry. In particular, you should aim for the inference step to be fully reproducible so that it can be run with any new set of data, whether or not it is included in the test set.
 
 ## Repo organization
 ```
