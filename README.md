@@ -7,31 +7,53 @@ Tilted-Towers (lucas.robinet and Kheil-Z) solution
 ```
 .
 ├── README.md          <- You are here!
-├── example_documentation_guide.pdf <- Reference for the solution documentation winners are required to submit
-├── README_template.md <- Template that you can fill in to document your solution code
-├── src                <- Folder for your project's source code
-├── models             <- Folder for your trained models, model predictions, or model summaries
-└── Example_submission <- Example of a solution submission
-    ├── README.md      <- Example README containing all required information
-    └── ...            <- Codebase for the example submission
+├── example_documentation_guide.pdf <- Solution Documentation
+├── README_template.md <- Template that you can fill in to document your solution code ????
+├── src                <-  Solution source code
+└── models             <- Trained models
+
 ```
+ 
+## Summary
+TODO
 
-The structure of this repo is based on DrivenData's [cookiecutter-data-science](https://github.com/drivendata/cookiecutter-data-science/tree/master/%7B%7B%20cookiecutter.repo_name%20%7D%7D) project template, which we recommend for your submission. Below are a few notes to keep in mind for the purposes of competition solutions.
+## Setup
+1. Install the prerequisities:
+    - Python version 3.11.2 (TODO)
+    - AWS CLI ([installation guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html))
+    - `git clone https://github.com/Kheil-Z/VisioMelSolution.git `
+    - `cd VisioMelSolution`
+2. Install the required python packages:
+    - `conda create --name visioMel `
+    - `conda install pip `
+    - `pip install -r requirements.txt `
 
-**README**: Your solution must include an extremely clear README that explains what code needs to be run to produce your submission starting from a fresh system with no dependencies installed. This includes obvious instructions and a list of all dependencies and requirements. See the provided [template](https://github.com/drivendataorg/prize-winner-template/blob/main/README_template.md) for a guide to get started.
+# Hardware
+The solutuon was run on TODO, 
 
-**Models**: Please provide access to all trained model weights necessary to generate predictions from new data samples without needing to retrain your model from scratch. Model weights can be contained in your archive or shared via a cloud storage service.
+Training time: <...>
 
-**Data**: You do not need to include the raw data provided in the competition. If your solution has additional data that it needs, you can create a `data` folder and include that in your archive.
+Inference time: <...>
 
-Note that the example README and README template are python specific. If you are using another programming language, you may need to adjust the references and tools.
+Machine specs you used for inference/training, and rough estimates of how long each step took.
 
-## Example submission
+# Run training
 
-The example submission is based on the [benchmark](https://www.drivendata.co/blog/genetic-attribution-benchmark/) for the Genetic Engineering Attribution Challenge. The goal is to provide an example README that covers all necessary information for a winning submission. Code is provided for reference to help understand the example README.
+1. `python prepare_data.py `
+2. `python multimodal_tritrain.py `
+3. `python tritrain.py `
 
-## Additional tips & resources
+# Run inference
+#### Using pretrained models (skip previous steps):
+` python src/run_infer.py --model_path ../models/pretrained_after_finetune.pth --tritrain_path ../models/pretrained_tritrain.pth `
+#### Using new model (if you followed the previous training steps):
+` python src/run_infer.py --model_path ../models/after_finetune.pth --tritrain_path ../models/tritrain.pth `
 
-- Check out our cookiecutter [open source data science template](http://drivendata.github.io/cookiecutter-data-science/) as a general resource for sharing data science code effectively.
-- The [3rd Place winner](https://github.com/drivendataorg/deep-chimpact-winners/tree/master/3rd%20Place) from the Deep Chimpact: Depth Estimation for Wildlife Conservation competition provides a good example of a well-written README for more complicated code. A big thank you to user `vecxoz` for a well-written and clearly documented solution!
-- For a full list of what you need to submit, see the `example_documentation_guide.pdf`.
+| Arg              | Default                   | Help                                                            |
+|------------------|---------------------------|-----------------------------------------------------------------|
+| --model_path     | models/after_finetune.pth | Path to trained model used as classifier.                       |
+| --tritrain_path  | models/tritrain.pth       | Path to trained resNet model used as feature extractor.         |
+| --model_type     | FC                        | Tpe of model ("FC" or "CNN", see model class)                   |
+| --relapse_only   | False                     | Describes model outputs (see model class)                       |
+| --data_path      | data/                     | Path to data, must contain 'metada.csv' and tiff format images. |
+| --age_trick_bool | True                      | use age trick at inference                                      |
