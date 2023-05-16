@@ -61,12 +61,12 @@ Machine specs you used for inference/training, and rough estimates of how long e
    - Either : 
       - Iteratively downloads the Tiff images from the competions AWS bucket, saves a downsampled version of the image and deletes the heavy Tiff file. (saved as .png files in data/images/)
       - Or if Tiff data is already available, use --data_path flag to signal a path to a folder which should be structured as: 
+      
             ```
             .
             ├── train_metadata.csv          <- Data description csv (see challenge for expected format)
             ├── train_labels.csv    <- Labels (see challenge for expected format)
             └── images/    <- Folder containing all TIFF format images
-
             ```
 2. `python src/tritrain.py `
    - Train and save the ResNet on the downloaded images. (You should now have a "tritrain.pth" file in the "models/" directory.)
