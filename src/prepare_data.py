@@ -15,10 +15,10 @@ from tqdm import tqdm
 import pyvips
 
 
-def data_split(data_path):
+def data_split(data_path, root):
     #####
-    if not os.path.exists(os.path.join(data_path, "images/")):
-        os.makedirs(os.path.join(data_path, "images/"))
+    if not os.path.exists(os.path.join(root, "data/images/")):
+        os.makedirs(os.path.join(root, "data/images/"))
 
     ##### Create train Val split
     metadata = pd.read_csv(os.path.join(data_path,'train_metadata.csv'))
@@ -40,7 +40,7 @@ def main(args):
     data_path = os.path.join(root,"data/")
     if args.data_path is not None:
         data_path = args.data_path
-    metadata = data_split(data_path)
+    metadata = data_split(data_path, root)
 
     ##### Download tiffs and save appropriate png
     list_names = metadata.filename.to_numpy()

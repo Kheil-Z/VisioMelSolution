@@ -56,12 +56,21 @@ Machine specs you used for inference/training, and rough estimates of how long e
 
 # Run training (Skip if want to infer using pretrained models)
 
-1. `python prepare_data.py `
+1. `python src/prepare_data.py ` or `python src/prepare_data.py --data_path PATH/TO/TIFFS/` 
    - Splits the given data into the stratified train and validation datasets which we used. (saved as .csv files in data/)
-   - Iteratively downloads the Tiff images from the competions AWS bucket, saves a downsampled version of the image and deletes the heavy Tiff file. (saved as .png files in data/images/)
-2. `python tritrain.py `
+   - Either : 
+      - Iteratively downloads the Tiff images from the competions AWS bucket, saves a downsampled version of the image and deletes the heavy Tiff file. (saved as .png files in data/images/)
+      - Or if Tiff data is already available, use --data_path flag to signal a path to a folder which should be structured as: 
+            ```
+            .
+            ├── train_metadata.csv          <- Data description csv (see challenge for expected format)
+            ├── train_labels.csv    <- Labels (see challenge for expected format)
+            └── images/    <- Folder containing all TIFF format images
+
+            ```
+2. `python src/tritrain.py `
    - Train and save the ResNet on the downloaded images. (You should now have a "tritrain.pth" file in the "models/" directory.)
-3. `python multimodal_tritrain.py `
+3. `python src/multimodal_tritrain.py `
    - Train and save the Multi-modal deep classifier on the image embeddings and tabular data. (You should now have a "after_finetune.pth" file in the "models/" directory.)
 
 # Run inference
