@@ -15,9 +15,9 @@ import random
 import torchvision
 
 # Local libraries
-from src.utils.models import BreslowUlcerationRelapseModel
-from src.utils.datasets import BreslowUlcerationRelapseDataset
-from src.utils.imputers import ulceration_breslow_from_relapse_imputer
+from utils.models import BreslowUlcerationRelapseModel
+from utils.datasets import BreslowUlcerationRelapseDataset
+from utils.imputers import ulceration_breslow_from_relapse_imputer
 
 root = os.getcwd()
 

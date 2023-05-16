@@ -14,8 +14,8 @@ from torchvision.transforms import RandomRotation, Compose, RandomHorizontalFlip
 import torch.nn as nn
 
 # Local libraries
-from src.utils.models import DummyModel, ImageTabularModel
-from src.utils.dataframe_process import clean_df
+from utils.models import DummyModel, ImageTabularModel
+from utils.dataframe_process import clean_df
 
 
 ################################################################
@@ -26,7 +26,7 @@ DATA_ROOT = Path("/code_execution/data")
 def predict(device, test_dataframe, features_names, model_type, dropout, relapse_only, ImageTabularModel_path, age_trick=True):
     model = ImageTabularModel(len(features_names),model_type,
                             dropout=dropout, relapse_only=relapse_only)
-    model.load_state_dict(torch.load(ImageTabularModel_path)) # TODO
+    model.load_state_dict(torch.load(ImageTabularModel_path, map_location=device)) # TODO
     model = model.to(device)
     model = model.eval()
 
@@ -54,8 +54,8 @@ def predict(device, test_dataframe, features_names, model_type, dropout, relapse
     return preds_dict
 
 def create_test_df(device, args):
-    test_dataframe = pd.read_csv(args.args.data_path / "test_metadata.csv")
-
+    test_dataframe = pd.read_csv(os.path.join(args.data_path, "test_metadata.csv"))
+    
     # Remove columns :
     filenames = test_dataframe.filename.to_numpy()
     test_dataframe = test_dataframe.drop(columns=['tif_cksum', 'tif_size',
@@ -73,7 +73,7 @@ def create_test_df(device, args):
     logits_dict = {"filename": [],"latent":[]}
     for filename in filenames:
         logits_dict["filename"].append(filename)
-        img = get_image(args.data_path / filename)#os.join(data_root,img_path))
+        img = get_image(os.path.join(args.data_path, filename))#os.join(data_root,img_path))
         with torch.no_grad():
             logits_dict["latent"].append(dummy_model(img.unsqueeze(0).to(device)).cpu().squeeze().numpy())
     latent_df = pd.DataFrame.from_dict(logits_dict)
@@ -127,7 +127,7 @@ def get_image(path, transforms = Compose([ToTensor(),Normalize(mean=[0.485, 0.45
     return transforms(img)
 
 
-def main():
+def main(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test_dataframe,filenames = create_test_df(device, args)
 

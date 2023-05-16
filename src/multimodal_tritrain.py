@@ -9,10 +9,10 @@ import torch
 import torch.nn as nn
 
 # Local libraries
-from .utils.dataframe_process import make_dataframe_with_latent_space, clean_df
-from .utils.models import ImageTabularModel
-from .utils.datasets import ImageTabular
-from .utils.utils import train_epoch
+from utils.dataframe_process import make_dataframe_with_latent_space, clean_df
+from utils.models import ImageTabularModel
+from utils.datasets import ImageTabular
+from utils.utils import train_epoch
 ################################################################
 ################################################################
 def warn(*args, **kwargs):
