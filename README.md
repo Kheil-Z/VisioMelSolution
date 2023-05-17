@@ -26,13 +26,7 @@ The dataset at hand consists of multimodal data ([Detailed dataset description](
 
 In order to make the most of all available data our submitted solution encodes the *image data** as a *512 dimentional vector* using a ResNet18 finedtuned on predicting the various labels. Meanwhile *tabular data* are mapped using well-designed dictionnaries to various values. A shallow fully connected network is then applied to the tabular tensor data as well as the image projection in the ResNet's latent space. Finally three classification layers allow us to train our network to predict the labels described above.
 
-Our final model is thus composed as follows: 
-
-TODO : inser drawio figure?
-
 Models are trained with various loss functions (BCE and FocalLoss), and the three loss terms are averaged using a weighted sum before backpropating the resulting loss.
-
-TODO : more?
 
 ## Setup
 1. Install the prerequisities:
